@@ -9,16 +9,14 @@ POS_INICIAL_X = (WINDOWS_WIDTH // BLOCK // 2) * BLOCK
 POS_INICIAL_Y = (WINDOWS_HEIGHT // BLOCK // 2) * BLOCK
 direcao = K_RIGHT
 
-def colisao(pos1,pos2):
+def colisao(pos1, pos2):
     return pos1 == pos2
 
 def verifica_margens(pos):
-    if 0 <= pos[0] < WINDOWS_WIDTH and 0 <= pos[1] < WINDOWS_HEIGHT:
-        return False
-    else:
-        return True
+    return not (0 <= pos[0] < WINDOWS_WIDTH and 0 <= pos[1] < WINDOWS_HEIGHT)
 
 def game_over():
+    print("Game Over")
     pygame.quit()
     quit()
 
@@ -31,8 +29,11 @@ pygame.init()
 window = pygame.display.set_mode([WINDOWS_WIDTH, WINDOWS_HEIGHT])
 clock = pygame.time.Clock()
 
-# Inicializa a cobra centralizada e alinhada ao grid
-cobra_pos = [(POS_INICIAL_X, POS_INICIAL_Y), (POS_INICIAL_X + BLOCK, POS_INICIAL_Y), (POS_INICIAL_X + 2 * BLOCK, POS_INICIAL_Y)]
+cobra_pos = [
+    (POS_INICIAL_X, POS_INICIAL_Y),
+    (POS_INICIAL_X - BLOCK, POS_INICIAL_Y),
+    (POS_INICIAL_X - 2 * BLOCK, POS_INICIAL_Y)
+]
 cobra_surface = pygame.Surface((BLOCK, BLOCK))
 cobra_surface.fill((59, 59, 72))
 
@@ -49,44 +50,40 @@ while running:
             running = False
         elif evento.type == KEYDOWN:
             if evento.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT]:
+                if evento.key == K_UP and direcao == K_DOWN:
+                    continue
+                elif evento.key == K_DOWN and direcao == K_UP:
+                    continue
+                elif evento.key == K_LEFT and direcao == K_RIGHT:
+                    continue
+                elif evento.key == K_RIGHT and direcao == K_LEFT:
+                    continue
                 direcao = evento.key
 
-    window.blit(maca_surface, maca_pos)
+    head_x, head_y = cobra_pos[0]
+    if direcao == K_RIGHT:
+        head_x += BLOCK
+    elif direcao == K_LEFT:
+        head_x -= BLOCK
+    elif direcao == K_UP:
+        head_y -= BLOCK
+    elif direcao == K_DOWN:
+        head_y += BLOCK
+    cobra_pos = [(head_x, head_y)] + cobra_pos[:-1]
 
-    if (colisao(cobra_pos[0], maca_pos)):
-        cobra_pos.append((-10,-10))
+    if colisao(cobra_pos[0], maca_pos):
+        cobra_pos.append(cobra_pos[-1])
         maca_pos = gera_pos_aleatoria()
-
-    for pos in cobra_pos:
-        window.blit(cobra_surface, pos)
-
-    for item in range(len(cobra_pos)-1,0,-1):
-        cobra_pos[item] = cobra_pos[item-1]
-
+    if any(colisao(cobra_pos[0], cobra_pos[item]) for item in range(1, len(cobra_pos))):
+        game_over()
     if verifica_margens(cobra_pos[0]):
         game_over()
 
-    if direcao == K_RIGHT:
-        nova_x = cobra_pos[0][0] + BLOCK
-        nova_y = cobra_pos[0][1]
-        cobra_pos[0] = (nova_x, nova_y)
-
-    if direcao == K_LEFT:
-        nova_x = cobra_pos[0][0] - BLOCK
-        nova_y = cobra_pos[0][1]
-        cobra_pos[0] = (nova_x, nova_y)
-
-    if direcao == K_UP:
-        nova_x = cobra_pos[0][0]
-        nova_y = cobra_pos[0][1] - BLOCK
-        cobra_pos[0] = (nova_x, nova_y)
-
-    if direcao == K_DOWN:
-        nova_x = cobra_pos[0][0]
-        nova_y = cobra_pos[0][1] + BLOCK
-        cobra_pos[0] = (nova_x, nova_y)
+    window.blit(maca_surface, maca_pos)
+    for pos in cobra_pos:
+        window.blit(cobra_surface, pos)
 
     pygame.display.update()
-    clock.tick(10)
+    clock.tick(20)
 
 pygame.quit()

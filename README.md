@@ -18,20 +18,14 @@ Este é um jogo clássico da Cobra desenvolvido em Python utilizando a bibliotec
 ## Instalação
 
 1. **Clone o repositório:**
-   ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
-   cd seu-repositorio
-   
+ 
 2. **Crie um ambiente virtual (opcional, mas recomendado):**
-python -m venv venv
-source venv/bin/activate  # No Windows use `venv\Scripts\activate`
 
 3. **Instale o Pygame:**
 pip install pygame
 
 **Como Jogar**
 1. **Execute o jogo:**
-python seu_arquivo_de_jogo.py
 
 2. **Controle a cobra usando as teclas de seta:**
 

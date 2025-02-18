@@ -17,17 +17,17 @@ Este é um jogo clássico da Cobra desenvolvido em Python utilizando a bibliotec
 
 ## Instalação
 
-1. **Clone o repositório:**
+1. **Clone o repositório**
  
-2. **Crie um ambiente virtual (opcional, mas recomendado):**
+2. **Crie um ambiente virtual (opcional, mas recomendado)**
 
 3. **Instale o Pygame:**
 pip install pygame
 
 **Como Jogar**
-1. **Execute o jogo:**
+1. **Execute o jogo**
 
-2. **Controle a cobra usando as teclas de seta:**
+2. **Controle a cobra usando as teclas de seta**
 
 Seta para cima: Move a cobra para cima
 Seta para baixo: Move a cobra para baixo
